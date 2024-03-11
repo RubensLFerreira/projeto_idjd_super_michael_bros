@@ -14,12 +14,15 @@ public class Player : MonoBehaviour
     
     private GameController gcPlayer;
 
+    public AudioSource audioS;
+    public AudioClip[] SoundS;
+
     void Start()
     {
         playerAnim = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
         rbPlayer = GetComponent<Rigidbody2D>();
-        gcPlayer = Object.FindFirstObjectByType<GameController>(); // Corrigido para Object.FindFirstObjectByType
+        gcPlayer = Object.FindFirstObjectByType<GameController>();
         if(gcPlayer == null)
         {
             Debug.LogError("GameController não encontrado!");
@@ -27,7 +30,7 @@ public class Player : MonoBehaviour
         else
         {
             gcPlayer.coins = 0;
-            gcPlayer.porcoes = 0;
+            //gcPlayer.porcoes = 0;
         }
     }
 
@@ -99,21 +102,19 @@ public class Player : MonoBehaviour
             Destroy(collision.gameObject);
             if(gcPlayer != null)
             {
-                gcPlayer.coins++;
-                gcPlayer.textoMoeda.text = gcPlayer.coins.ToString();
+                audioS.clip = SoundS[0];
+                audioS.Play();
+                //gcPlayer.coins++;
+                gcPlayer.SetCoins(1);
+                GameController.gc.RefreshScreen();
+                //gcPlayer.textoMoeda.text = gcPlayer.coins.ToString();
             }
         }
 
-        if (collision.gameObject.tag == "Porcoes")
-        {
-            Destroy(collision.gameObject);
-            if(gcPlayer != null)
+        if(collision.gameObject.tag == "Enemy")
             {
-                gcPlayer.porcoes++;
-                gcPlayer.textoPorcao.text = gcPlayer.porcoes.ToString();
-            }
-            if(collision.gameObject.tag == "Enemy")
-            {
+                audioS.clip = SoundS[1];
+                audioS.Play();
                 rbPlayer.velocity = Vector2.zero;
                 rbPlayer.AddForce(Vector2.up*5, ForceMode2D.Impulse);
                 collision.gameObject.GetComponent<SpriteRenderer>().flipY = true;
@@ -123,7 +124,17 @@ public class Player : MonoBehaviour
                 collision.gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
                 Destroy(collision.gameObject, 1f);
             }
-        }
+
+        //if (collision.gameObject.tag == "Porcoes")
+        //{
+        //    Destroy(collision.gameObject);
+        //    if(gcPlayer != null)
+        //    {
+        //        gcPlayer.porcoes++;
+        //        gcPlayer.textoPorcao.text = gcPlayer.porcoes.ToString();
+        //    }
+            
+        //}
     }
 }
 

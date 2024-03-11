@@ -9,7 +9,7 @@ public class GameController : MonoBehaviour
     public Text textoMoeda;
     public Text textoPorcao;
     public int coins;
-    public int porcoes;
+    public int porcoes = 2;
 
     void Awake()
     {
@@ -22,12 +22,39 @@ public class GameController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        RefreshScreen();
+    }
+
+    public void SetLives(int porcao)
+    {
+        porcoes += porcao;
+        if(porcoes >= 0)
+        {
+            RefreshScreen();
+        }
+    }
+
+    public void SetCoins(int coin)
+    {
+        coins += coin;
+        if(coins >= 10)
+        {
+            coins = 0;
+            porcoes += 1;
+        }
+        RefreshScreen();
+    }
+        
+    public void RefreshScreen()
+    {
+        textoMoeda.text = coins.ToString();
+        textoPorcao.text = porcoes.ToString();
     }
 
     void Start()
     {
-        textoMoeda.text = coins.ToString();
-        textoPorcao.text = porcoes.ToString();
+        //textoMoeda.text = coins.ToString();
+        //textoPorcao.text = porcoes.ToString();
     }
 
     void Update()
@@ -35,6 +62,7 @@ public class GameController : MonoBehaviour
 
     }
 }
+
 
 
 

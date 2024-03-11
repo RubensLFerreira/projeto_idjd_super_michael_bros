@@ -8,13 +8,13 @@ public class PlayerLife : MonoBehaviour
     public bool alive = true;
     void Start()
     {
-        
+        GameController.gc.RefreshScreen();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        GameController.gc.RefreshScreen();
     }
     public void LoseLife()
     {
@@ -27,8 +27,25 @@ public class PlayerLife : MonoBehaviour
             gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
             gameObject.GetComponent<Player>().enabled = false;
             gameObject.GetComponent<Animator>().SetBool("Andar",false);
-            Invoke("LoadScene",0.5f);
+            GameController.gc.SetLives(-1);
+            
+
+            if(GameController.gc.porcoes >= 0)
+            {
+                Invoke("LoadScene",0.5f);
+            }
+            else
+            {
+                Invoke("LoadGameOver", 0.5f);
+                //Debug.Log("Game Over!");
+                GameController.gc.porcoes = 2;
+            }
         }
+    }
+
+    void LoadGameOver()
+    {
+        SceneManager.LoadScene("GameOver");
     }
     void LoadScene()
     {
